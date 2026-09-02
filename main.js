@@ -45,10 +45,10 @@ let fadeInterval = null;
 // Initialize
 async function init() {
   try {
-    const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Tokyo');
+    const response = await fetch('https://ntp-a1.nict.go.jp/cgi-bin/json');
     const data = await response.json();
     
-    const realUtcTime = data.unixtime * 1000;
+    const realUtcTime = data.st * 1000;
     timeOffset = realUtcTime - Date.now();
     
     document.querySelector('#join-overlay p').textContent = "時刻が同期されました。";
