@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synchronized Pomodoro Timer</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="work-phase">
+  <!-- Background gradient container -->
+  <div id="bg-gradient" class="work-mode"></div>
+
+  <!-- Join overlay to unlock audio -->
+  <div id="join-overlay">
+    <h1>Pomodoro Timer</h1>
+    <p>時刻を同期しています...</p>
+    <button id="join-btn" disabled>作業に参加する</button>
+  </div>
+
+  <!-- Top Right Controls -->
+  <div id="top-right-controls">
+    <!-- Credits Button -->
+    <button id="credits-btn">Credits</button>
+    
+    <!-- Adjust Menu -->
+    <div class="adjust-wrapper">
+      <button id="adjust-btn">Adjust</button>
+      <div id="adjust-menu" class="accordion-menu">
+        <div class="slider-group">
+          <label for="work-vol">Work BGM</label>
+          <input type="range" id="work-vol" min="0" max="100" value="50">
+        </div>
+        <div class="slider-group">
+          <label for="break-vol">Break BGM</label>
+          <input type="range" id="break-vol" min="0" max="100" value="50">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credits Modal -->
+  <div id="credits-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="close-modal-btn">&times;</button>
+      <iframe src="credits.html" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <!-- Main Timer UI -->
+  <div id="app" style="opacity: 0; transition: opacity 0.5s ease; display: none;">
+    <div class="timer-container">
+      <svg class="progress-ring" width="320" height="320">
+        <circle class="progress-ring__circle_bg" stroke-width="16" fill="transparent" r="140" cx="160" cy="160"/>
+        <circle class="progress-ring__circle" stroke-width="16" fill="transparent" r="140" cx="160" cy="160"/>
+      </svg>
+      <div class="timer-text-container">
+        <div id="phase-text">WORK</div>
+        <div id="time-text">--:--</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playing Info -->
+  <div id="playing-info">Playing: -</div>
+
+  <!-- Audio elements for crossfading -->
+  <audio id="audio-player-1"></audio>
+  <audio id="audio-player-2"></audio>
+
+  <script src="main.js"></script>
+</body>
+</html>
