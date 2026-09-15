@@ -1,11 +1,11 @@
 // Audio tracks lists (opus files)
 const audioTracks = {
   work: ['./music/work/Dall_Tube_Heaven.opus'],
-  break: ['./music/break/Mysterious_forest.opus']
+  break: ['./music/break/Mysterious_forest.opus', './music/break/2_23_am.opus']
 };
 
-let workVolume = 0.2;
-let breakVolume = 0.2;
+let workVolume = 0.1;
+let breakVolume = 0.1;
 
 let timeOffset = 0; // ms offset from local Date.now() to real UTC time
 let currentPhase = null; // 'work' or 'break'
@@ -206,7 +206,10 @@ function playNextAudio(phase, isPhaseChange = true) {
     playNextAudio(currentPhase, false);
   };
 
-  if (fadeInterval) clearInterval(fadeInterval);
+  if (fadeInterval) {
+    clearInterval(fadeInterval);
+    fadeInterval = null;
+  }
 
   if (isPhaseChange && currentAudio && !currentAudio.paused && currentAudio.src) {
     // Fade out current, then fade in next (Time-based to handle background throttling)
@@ -242,6 +245,7 @@ function playNextAudio(phase, isPhaseChange = true) {
 
           if (inFraction >= 1) {
             clearInterval(fadeInterval);
+            fadeInterval = null;
           }
         }, 100);
       }
@@ -261,16 +265,27 @@ adjustBtn.addEventListener('click', () => {
   adjustMenu.classList.toggle('open');
 });
 
-// Slider values: 50% = 0.2 actual volume. 100% = 0.4 volume.
+// Sync slider values on load to fix reload mismatch
+function syncVolumes() {
+  const wVal = Math.min(100, Math.max(0, Number(workVolSlider.value)));
+  const bVal = Math.min(100, Math.max(0, Number(breakVolSlider.value)));
+  workVolume = (wVal / 100) * 0.4;
+  breakVolume = (bVal / 100) * 0.4;
+}
+syncVolumes();
+
+// Slider values: 25% = 0.1 actual volume. 100% = 0.4 volume.
 workVolSlider.addEventListener('input', (e) => {
-  workVolume = (e.target.value / 100) * 0.4;
+  const val = Math.min(100, Math.max(0, Number(e.target.value)));
+  workVolume = (val / 100) * 0.4;
   if (currentPhase === 'work' && !fadeInterval && audioPlayers[activeAudioIndex] && !audioPlayers[activeAudioIndex].paused) {
     audioPlayers[activeAudioIndex].volume = workVolume;
   }
 });
 
 breakVolSlider.addEventListener('input', (e) => {
-  breakVolume = (e.target.value / 100) * 0.4;
+  const val = Math.min(100, Math.max(0, Number(e.target.value)));
+  breakVolume = (val / 100) * 0.4;
   if (currentPhase === 'break' && !fadeInterval && audioPlayers[activeAudioIndex] && !audioPlayers[activeAudioIndex].paused) {
     audioPlayers[activeAudioIndex].volume = breakVolume;
   }
